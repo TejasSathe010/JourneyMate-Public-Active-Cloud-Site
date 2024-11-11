@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using TravelPlanner.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add the ApplicationDbContext to the DI container
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 var app = builder.Build();
 
