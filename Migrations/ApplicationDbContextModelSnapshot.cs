@@ -17,26 +17,30 @@ namespace JourneyMatePublicActiveCloudSite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
 
-            modelBuilder.Entity("JourneyMate_Public_Active_Cloud_Site.Models.Itinerary", b =>
+            modelBuilder.Entity("TripPlanner.Models.Itinerary", b =>
                 {
                     b.Property<int>("ItineraryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("AccommodationBudget")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Activities")
                         .IsRequired()
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Budget")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DayNumber")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("FoodBudget")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ItemsToBring")
+                    b.Property<string>("ThingsToCarry")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TravelBudget")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TripId")
@@ -49,31 +53,28 @@ namespace JourneyMatePublicActiveCloudSite.Migrations
                     b.ToTable("Itineraries");
                 });
 
-            modelBuilder.Entity("JourneyMate_Public_Active_Cloud_Site.Models.Trip", b =>
+            modelBuilder.Entity("TripPlanner.Models.Trip", b =>
                 {
                     b.Property<int>("TripId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Destination")
+                    b.Property<string>("DestinationLocation")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SourceLocation")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TripName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("TripId");
@@ -81,9 +82,9 @@ namespace JourneyMatePublicActiveCloudSite.Migrations
                     b.ToTable("Trips");
                 });
 
-            modelBuilder.Entity("JourneyMate_Public_Active_Cloud_Site.Models.Itinerary", b =>
+            modelBuilder.Entity("TripPlanner.Models.Itinerary", b =>
                 {
-                    b.HasOne("JourneyMate_Public_Active_Cloud_Site.Models.Trip", "Trip")
+                    b.HasOne("TripPlanner.Models.Trip", "Trip")
                         .WithMany("Itineraries")
                         .HasForeignKey("TripId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -92,7 +93,7 @@ namespace JourneyMatePublicActiveCloudSite.Migrations
                     b.Navigation("Trip");
                 });
 
-            modelBuilder.Entity("JourneyMate_Public_Active_Cloud_Site.Models.Trip", b =>
+            modelBuilder.Entity("TripPlanner.Models.Trip", b =>
                 {
                     b.Navigation("Itineraries");
                 });

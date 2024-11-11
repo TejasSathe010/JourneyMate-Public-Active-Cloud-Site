@@ -1,5 +1,6 @@
 using JourneyMate_Public_Active_Cloud_Site.Models;
 using Microsoft.EntityFrameworkCore;
+using TripPlanner.Models;
 
 namespace TravelPlanner.Data
 {

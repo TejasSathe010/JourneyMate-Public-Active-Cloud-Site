@@ -1,0 +1,186 @@
+@model TripPlanner.Models.Trip
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/style.css">
+    <!-- Optional: Add custom styles directly here if needed -->
+    <style>
+        /* Ensure no overlap with the navbar */
+        h1 {
+            margin-top: 60px; /* Adjust based on your navbar height */
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Ensure everything inside the form is centered */
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-group input {
+            font-size: 1rem;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        /* Itinerary Card Style */
+        #itineraryForms {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Ensure the cards are centered */
+        }
+
+        .itinerary-day {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%; /* Adjust width for centered appearance */
+            max-width: 600px; /* Set a max width to prevent cards from becoming too wide */
+        }
+
+        .itinerary-day h4 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .itinerary-day label {
+            font-weight: 500;
+        }
+
+        .itinerary-day input {
+            font-size: 1rem;
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .itinerary-day input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+}
+
+<h1>Create Trip</h1>
+
+<form method="post" class="form-container">
+    <div class="form-group">
+        <label for="TripName">Trip Name</label>
+        <input type="text" class="form-control" id="TripName" name="TripName" required>
+    </div>
+    <div class="form-group">
+        <label for="SourceLocation">Source Location</label>
+        <input type="text" class="form-control" id="SourceLocation" name="SourceLocation" required>
+    </div>
+    <div class="form-group">
+        <label for="DestinationLocation">Destination Location</label>
+        <input type="text" class="form-control" id="DestinationLocation" name="DestinationLocation" required>
+    </div>
+    <div class="form-group">
+        <label for="StartDate">Start Date</label>
+        <input type="date" class="form-control" id="StartDate" name="StartDate" required>
+    </div>
+    <div class="form-group">
+        <label for="EndDate">End Date</label>
+        <input type="date" class="form-control" id="EndDate" name="EndDate" required>
+    </div>
+
+    <!-- Itinerary form generation (dynamic) -->
+    <div id="itineraryForms">
+        <!-- Placeholder for dynamic itinerary forms -->
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Trip</button>
+</form>
+
+@section Scripts {
+    <script>
+        // JavaScript to generate the itinerary forms based on the start and end date
+        document.getElementById('StartDate').addEventListener('change', generateItineraryForms);
+        document.getElementById('EndDate').addEventListener('change', generateItineraryForms);
+
+        function generateItineraryForms() {
+            const startDate = new Date(document.getElementById('StartDate').value);
+            const endDate = new Date(document.getElementById('EndDate').value);
+            const itineraryContainer = document.getElementById('itineraryForms');
+            itineraryContainer.innerHTML = ''; // Clear existing forms
+
+            // Calculate the number of days between start and end dates
+            const dayCount = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+            for (let i = 0; i < dayCount; i++) {
+                // Create a copy of startDate for each day's itinerary
+                let dayDate = new Date(startDate);
+                dayDate.setDate(startDate.getDate() + i);
+
+                const itineraryDay = document.createElement('div');
+                itineraryDay.classList.add('itinerary-day');
+                itineraryDay.innerHTML = `
+                    <h4>Day ${i + 1} - ${dayDate.toISOString().split('T')[0]}</h4>
+                    <input type="hidden" name="Itineraries[${i}].Date" value="${dayDate.toISOString().split('T')[0]}">
+                    <label for="FoodBudget_${i}">Food Budget</label>
+                    <input type="number" class="form-control" id="FoodBudget_${i}" name="Itineraries[${i}].FoodBudget" required>
+                    <label for="AccommodationBudget_${i}">Accommodation Budget</label>
+                    <input type="number" class="form-control" id="AccommodationBudget_${i}" name="Itineraries[${i}].AccommodationBudget" required>
+                    <label for="TravelBudget_${i}">Travel Budget</label>
+                    <input type="number" class="form-control" id="TravelBudget_${i}" name="Itineraries[${i}].TravelBudget" required>
+                    <label for="Activities_${i}">Activities</label>
+                    <input type="text" class="form-control" id="Activities_${i}" name="Itineraries[${i}].Activities" required>
+                    <label for="ThingsToCarry_${i}">Things to Carry</label>
+                    <input type="text" class="form-control" id="ThingsToCarry_${i}" name="Itineraries[${i}].ThingsToCarry" required>
+                `;
+
+                itineraryContainer.appendChild(itineraryDay);
+            }
+        }
+    </script>
+}

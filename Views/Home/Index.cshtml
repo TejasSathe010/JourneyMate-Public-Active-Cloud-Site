@@ -1,8 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    Layout = "_Layout"; 
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<header class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Trip Planner</h1>
+        <p class="hero-description">Your adventure starts here</p>
+        <a href="@Url.Action("Create", "Trips")" class="btn btn-primary">Create Trip</a>
+    </div>
+</header>
