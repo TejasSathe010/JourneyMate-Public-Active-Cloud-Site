@@ -16,4 +16,7 @@ namespace TripPlanner.Models
         public DateTime EndDate { get; set; }
         public List<Itinerary> Itineraries { get; set; }
     }
+    public class Trips{
+        public List<Trip> data { get; set; }
+    }
 }
