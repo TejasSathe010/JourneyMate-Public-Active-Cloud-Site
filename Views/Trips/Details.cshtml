@@ -178,8 +178,8 @@
                 <p><strong>To:</strong> @Model.DestinationLocation</p>
             </div>
             <div class="trip-info">
-                <p><strong>Start Date:</strong> @Model.StartDate</p>
-                <p><strong>End Date:</strong> @Model.EndDate</p>
+                <p><strong>Start Date:</strong> @Model.StartDate.ToString("MMM dd, yyyy")</p>
+                <p><strong>End Date:</strong> @Model.EndDate.ToString("MMM dd, yyyy")</p>
             </div>
         </header>
         <div>
@@ -197,10 +197,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            DateTime startDate = @Model.Itineraries.FirstOrDefault().Date; // First date as the starting date
+                        }
                         @foreach (var item in @Model.Itineraries)
                         {
+                            int dayNumber = (@item.Date - startDate).Days + 1; // Calculate day number
                             <tr>
-                                <td>@item.Date</td>
+                                <td>Day @dayNumber - @item.Date.ToString("MMM dd, yy")</td>
                                 <td>@item.FoodBudget</td>
                                 <td>@item.AccommodationBudget</td>
                                 <td>@item.TravelBudget</td>
@@ -220,13 +224,13 @@
             </div>             
         </div>
         <div class="chart">
-            <h3>Days per Trip</h3>
+            <h3>Budget Per Day</h3>
             <div class="chart-container" id="barChartPlaceholder">
                 <canvas id="budgetBarChart"></canvas>
             </div>
         </div>
         <div class="chart">
-            <h3>Expenses Distribution</h3>
+            <h3>Budget Distribution</h3>
             <div class="chart-container" id="lineChartPlaceholder">
                 <canvas id="expensesLineChart"></canvas>
             </div>
