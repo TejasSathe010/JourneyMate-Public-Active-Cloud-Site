@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="~/css/style.css">
     <style>
         h1 {
-            margin-top: 80px;
+            margin-top: 60px;
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
@@ -20,7 +20,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Ensure everything inside the form is centered */
         }
 
         .form-group {
@@ -62,12 +62,13 @@
             border-color: #004085;
         }
 
+        /* Itinerary Card Style */
         #itineraryForms {
             margin-top: 20px;
             width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center; 
+            align-items: center; /* Ensure the cards are centered */
         }
 
         .itinerary-day {
@@ -77,8 +78,8 @@
             border-radius: 8px;
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
+            width: 80%; /* Adjust width for centered appearance */
+            max-width: 600px; /* Set a max width to prevent cards from becoming too wide */
         }
 
         .itinerary-day h4 {
@@ -107,41 +108,53 @@
     </style>
 }
 
-<h1>Create Trip</h1>
+@if (Model == null)
+{
+    <p>No trip found.</p>
+}
+
+
+<h1>Edit Trip</h1>
 
 <form method="post" class="form-container">
+    <!-- Hidden input for Trip ID (for reference in update operations) -->
+    <input type="hidden" name="TripId" value="@Model.TripId" />
+
     <div class="form-group">
         <label for="TripName">Trip Name</label>
-        <input type="text" class="form-control" id="TripName" name="TripName" required>
+        <input type="text" class="form-control" id="TripName" name="TripName" value="@Model.TripName" required>
     </div>
     <div class="form-group">
         <label for="SourceLocation">Source Location</label>
-        <input type="text" class="form-control" id="SourceLocation" name="SourceLocation" required>
+        <input type="text" class="form-control" id="SourceLocation" name="SourceLocation" value="@Model.SourceLocation" required>
     </div>
     <div class="form-group">
         <label for="DestinationLocation">Destination Location</label>
-        <input type="text" class="form-control" id="DestinationLocation" name="DestinationLocation" required>
+        <input type="text" class="form-control" id="DestinationLocation" name="DestinationLocation" value="@Model.DestinationLocation" required>
     </div>
     <div class="form-group">
         <label for="StartDate">Start Date</label>
-        <input type="date" class="form-control" id="StartDate" name="StartDate" required>
+        <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required>
     </div>
     <div class="form-group">
         <label for="EndDate">End Date</label>
-        <input type="date" class="form-control" id="EndDate" name="EndDate" required>
+        <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required>
     </div>
 
     <!-- Itinerary form generation (dynamic) -->
     <div id="itineraryForms">
-        <!-- Placeholder for dynamic itinerary forms -->
+        <!-- Itinerary forms will be generated dynamically using JavaScript below -->
     </div>
 
-    <button type="submit" class="btn btn-primary">Save Trip</button>
+    <button type="submit" class="btn btn-primary">Update Trip</button>
 </form>
 
 @section Scripts {
     <script>
-        // JavaScript to generate the itinerary forms based on the start and end date
+        document.addEventListener("DOMContentLoaded", function() {
+            generateItineraryForms(); // Generate itinerary forms with prepopulated values on page load
+        });
+
         document.getElementById('StartDate').addEventListener('change', generateItineraryForms);
         document.getElementById('EndDate').addEventListener('change', generateItineraryForms);
 
@@ -149,35 +162,37 @@
             const startDate = new Date(document.getElementById('StartDate').value);
             const endDate = new Date(document.getElementById('EndDate').value);
             const itineraryContainer = document.getElementById('itineraryForms');
-            itineraryContainer.innerHTML = ''; // Clear existing forms
-
-            // Calculate the number of days between start and end dates
+            itineraryContainer.innerHTML = '';
             const dayCount = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
+            const itineraries = @Html.Raw(Json.Serialize(Model.Itineraries)).$values;
+
             for (let i = 0; i < dayCount; i++) {
-                // Create a copy of startDate for each day's itinerary
                 let dayDate = new Date(startDate);
                 dayDate.setDate(startDate.getDate() + i);
 
                 const itineraryDay = document.createElement('div');
                 itineraryDay.classList.add('itinerary-day');
+                
                 itineraryDay.innerHTML = `
                     <h4>Day ${i + 1} - ${dayDate.toISOString().split('T')[0]}</h4>
                     <input type="hidden" name="Itineraries[${i}].Date" value="${dayDate.toISOString().split('T')[0]}">
+                    <input type="hidden" name="Itineraries[${i}].ItineraryId" value="${itineraries[i] ? itineraries[i].itineraryId : ''}">
                     <label for="FoodBudget_${i}">Food Budget</label>
-                    <input type="number" class="form-control" id="FoodBudget_${i}" name="Itineraries[${i}].FoodBudget" required>
+                    <input type="number" class="form-control" id="FoodBudget_${i}" name="Itineraries[${i}].FoodBudget" value="${itineraries[i] ? itineraries[i].foodBudget : ''}" required>
                     <label for="AccommodationBudget_${i}">Accommodation Budget</label>
-                    <input type="number" class="form-control" id="AccommodationBudget_${i}" name="Itineraries[${i}].AccommodationBudget" required>
+                    <input type="number" class="form-control" id="AccommodationBudget_${i}" name="Itineraries[${i}].AccommodationBudget" value="${itineraries[i] ? itineraries[i].accommodationBudget : ''}" required>
                     <label for="TravelBudget_${i}">Travel Budget</label>
-                    <input type="number" class="form-control" id="TravelBudget_${i}" name="Itineraries[${i}].TravelBudget" required>
+                    <input type="number" class="form-control" id="TravelBudget_${i}" name="Itineraries[${i}].TravelBudget" value="${itineraries[i] ? itineraries[i].travelBudget : ''}" required>
                     <label for="Activities_${i}">Activities</label>
-                    <input type="text" class="form-control" id="Activities_${i}" name="Itineraries[${i}].Activities" required>
+                    <input type="text" class="form-control" id="Activities_${i}" name="Itineraries[${i}].Activities" value="${itineraries[i] ? itineraries[i].activities : ''}" required>
                     <label for="ThingsToCarry_${i}">Things to Carry</label>
-                    <input type="text" class="form-control" id="ThingsToCarry_${i}" name="Itineraries[${i}].ThingsToCarry" required>
+                    <input type="text" class="form-control" id="ThingsToCarry_${i}" name="Itineraries[${i}].ThingsToCarry" value="${itineraries[i] ? itineraries[i].thingsToCarry : ''}" required>
                 `;
 
                 itineraryContainer.appendChild(itineraryDay);
             }
+
         }
     </script>
 }

@@ -1,0 +1,44 @@
+@model IEnumerable<TripPlanner.Models.Trip> 
+
+@{
+    ViewData["Title"] = "Trips List";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/style.css" />
+</head>
+
+<div class="container">
+    <header class="page-header">
+        <h1>Trips List</h1>
+        <p class="subtitle">Explore and manage your travel plans with ease</p>
+    </header>
+
+    <div class="trips-list">
+        @foreach (var trip in Model)
+        {
+            <div class="trip-card">
+                <div class="trip-details">
+                    <h2 class="trip-title">@trip.TripName</h2>
+                    <p><strong>Start Date:</strong> @trip.StartDate.ToString("MM/dd/yyyy")</p>
+                    <p><strong>End Date:</strong> @trip.EndDate.ToString("MM/dd/yyyy")</p>
+                    <p><strong>Source:</strong> @trip.SourceLocation</p>
+                    <p><strong>Destination:</strong> @trip.DestinationLocation</p>
+                </div>
+                <div class="trip-actions">
+                    <form action="@Url.Action("Delete", "Trips", new { id = trip.TripId })" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure you want to delete this trip?')">Delete</button>
+                    </form>
+                    <form action="@Url.Action("Edit", "Trips", new { id = trip.TripId })" method="get">
+                        <button type="submit" class="btn edit-btn">Edit</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="create-trip">
+        <a href="@Url.Action("Create", "Trips")" class="btn btn-primary">Create New Trip</a>
+    </div>
+</div>

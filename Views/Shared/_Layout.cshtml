@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Travel Planner</title>
-
-    <!-- Link to the CSS file -->
+    <link rel="icon" href="~/images/logo.jpg" type="image/jpg">
     <link rel="stylesheet" href="~/css/style.css">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
-        <div class="navbar-logo">Travel Planner</div>
+        <div class="navbar-logo">
+            <a href="@Url.Action("Index", "Home")"> <img src="~/images/logo.jpg" alt="Travel Planner Logo" class="navbar-logo-image"></a>
+        </div>
+        <div class="navbar-logo">JourneyMate</div>
         <ul class="navbar-links">
             <li><a href="@Url.Action("Index", "Home")">Home</a></li>
             <li><a href="@Url.Action("Index", "Trips")">Trips</a></li>
@@ -24,15 +25,26 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="content">
         @RenderBody()
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>© 2024 Travel Planner. All Rights Reserved.</p>
     </footer>
+    <!-- Include the JavaScript at the end of the body -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const navbarLinks = document.querySelector('.navbar-links');
+
+            toggleButton.addEventListener('click', () => {
+                console.log('clickedSSS')
+                navbarLinks.classList.toggle('active');
+            });
+        });
+    </script>
+
     @RenderSection("Scripts", required: false)
     @RenderSection("Styles", required: false)
 </body>
