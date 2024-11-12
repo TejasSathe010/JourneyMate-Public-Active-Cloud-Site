@@ -37,6 +37,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             align-items: center; /* Ensure everything inside the form is centered */
+            align-self: center;
         }
 
         header {
@@ -181,7 +182,7 @@
                 <p><strong>End Date:</strong> @Model.EndDate</p>
             </div>
         </header>
-        <section>
+        <div>
             <div>
                 <h2>Daily Activities & Costs</h2>
                 <table class="table table-itineraries">
@@ -210,29 +211,29 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        </div>
             
-        <section class="chart">
+        <div class="chart">
             <h3>Budget Allocation</h3>
             <div class="chart-container" id="pieChartPlaceholder">
                 <canvas id="budgetPieChart"></canvas>
             </div>             
-        </section>
-        <section class="chart">
+        </div>
+        <div class="chart">
             <h3>Days per Trip</h3>
             <div class="chart-container" id="barChartPlaceholder">
                 <canvas id="budgetBarChart"></canvas>
             </div>
-        </section>
-        <section class="chart">
+        </div>
+        <div class="chart">
             <h3>Expenses Distribution</h3>
             <div class="chart-container" id="lineChartPlaceholder">
                 <canvas id="expensesLineChart"></canvas>
             </div>
-        </section>
-        <section class="button-container">
+        </div>
+        <div class="button-container">
             <a href="@Url.Action("Index", "Trips")">Back To Trips</a>
-        </section>
+        </div>
     </div>
 </form>
 
