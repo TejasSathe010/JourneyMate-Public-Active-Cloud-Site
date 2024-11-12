@@ -17,6 +17,7 @@
     <div class="trips-list">
         @foreach (var trip in Model)
         {
+            <a href="@Url.Action("Details", "Trips", new { id = trip.TripId })" class="trip-link">
             <div class="trip-card">
                 <div class="trip-details">
                     <h2 class="trip-title">@trip.TripName</h2>
@@ -35,6 +36,7 @@
                     </form>
                 </div>
             </div>
+               </a>
         }
     </div>
 

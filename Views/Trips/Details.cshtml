@@ -250,7 +250,7 @@
         data: {
             labels: ['Food', 'Accommodation', 'Travel'],
             datasets: [{
-                data: pieData, 
+                data: pieData.$values, 
                 backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
             }]
         },
@@ -266,10 +266,10 @@
         new Chart(document.getElementById("budgetBarChart"), {
             type: 'bar',
             data: {
-                labels: barLineLabel, //Dynamic label
+                labels: barLineLabel.$values, //Dynamic label
                 datasets: [{
                     label: 'Budget',
-                    data: barData, // Dynamic data
+                    data: barData.$values, // Dynamic data
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)'
                     ]
@@ -299,25 +299,25 @@
         new Chart(document.getElementById("expensesLineChart"), {
             type: 'line',
             data: {
-                labels: barLineLabel, //Dynamic label
+                labels: barLineLabel.$values, //Dynamic label
                 datasets: [
                     {
                         label: 'Food Expenses',
-                        data: lineDataFood, // Dynamic data
+                        data: lineDataFood.$values, // Dynamic data
                         borderColor: '#3498db',
                         backgroundColor: 'rgba(52, 152, 219, 0.2)',
                         fill: true
                     },
                     {
                         label: 'Accommodation Expenses',
-                        data: lineDataAccommodation, // Dynamic data
+                        data: lineDataAccommodation.$values, // Dynamic data
                         borderColor: '#2ecc71',
                         backgroundColor: 'rgba(46, 204, 113, 0.2)',
                         fill: true
                     },
                     {
                         label: 'Travel Expenses',
-                        data: lineDataTravel, // Dynamic data
+                        data: lineDataTravel.$values, // Dynamic data
                         borderColor: '#e74c3c',
                         backgroundColor: 'rgba(231, 76, 60, 0.2)',
                         fill: true
