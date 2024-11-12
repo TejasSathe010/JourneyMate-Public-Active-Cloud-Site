@@ -33,22 +33,6 @@ In a world where time is precious, our goal is to free up more of it for what re
 
 The data model for JourneyMate handles the storage, retrieval, and analysis of data that supports itinerary creation, expense tracking, and personalized recommendations. This model is integral to the functionality of the app, ensuring smooth and efficient operation.
 
-## Code Commits
-
-Here are the key commits made by each team member:
-
-### Dinh Tho Tran's Commit
-![Dinh Commit Screenshot](#)
-
-### Yesha Desai's Commit
-![Yesha Commit Screenshot](#)
-
-### Shubham Sanjay Choudhari's Commit
-![Shubham Commit Screenshot](#)
-
-### Tejas Sathe's Commit
-![Tejas Commit Screenshot](#)
-
 ## License
 
 © 2024 Travel Planner. All Rights Reserved.
