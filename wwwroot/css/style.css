@@ -340,6 +340,16 @@ input[type="text"]:focus {
     flex-wrap: wrap;
 }
 
+.trip-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.trip-link:hover {
+    background-color: #f9f9f9;
+}
+
 .trip-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
