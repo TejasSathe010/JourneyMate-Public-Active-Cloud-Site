@@ -1,0 +1,348 @@
+@model TripPlanner.Models.Trip
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Trip Details</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+</head>
+@section Styles {
+    <link rel="stylesheet" href="~/css/style.css">
+    <!-- Optional: Add custom styles directly here if needed -->
+    <style>
+        /* Ensure no overlap with the navbar */
+        h1 {
+            margin-top: 60px; /* Adjust based on your navbar height */
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .trip-container {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            width: 85%;
+            max-width: 1100px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            align-items: center; /* Ensure everything inside the form is centered */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }   
+    
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .trip-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* Increase this value to create more space */
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #34495e;
+        }
+
+        .trip-info p {
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #34495e;
+            font-weight: 600;
+        }
+
+        .charts {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            text-align: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e1e1e1;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            flex-direction: column; 
+        }
+
+        #budgetPieChart,
+        #tripdaysBarChart,
+        #expensesLineChart {
+            max-width: 100%; /* Ensure the chart fits within the parent container */
+            max-height: 100%; /* Prevent overflow */
+            display: block;
+        }
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            width: 250px;
+            padding: 15px;
+            background-color: #95a5a6; /* Different background color */
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #7f8c8d; /* Darken color on hover */
+        }
+    </style>
+}
+
+<form method="get" class="trip-container">
+    <div class="container">
+        <header>
+            <h1>Your Trip</h1>
+            <p class="subtitle">@Model.TripName</p>
+            <div class="trip-info">
+                <p><strong>From:</strong> @Model.SourceLocation</p>
+                <p><strong>To:</strong> @Model.DestinationLocation</p>
+            </div>
+            <div class="trip-info">
+                <p><strong>Start Date:</strong> @Model.StartDate</p>
+                <p><strong>End Date:</strong> @Model.EndDate</p>
+            </div>
+        </header>
+        <section>
+            <div>
+                <h2>Daily Activities & Costs</h2>
+                <table class="table table-itineraries">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Cost (Food)</th>
+                            <th>Cost (Accommodation)</th>
+                            <th>Cost (Travel)</th>
+                            <th>Activities</th>
+                            <th>Things to Prepare</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @Model.Itineraries)
+                        {
+                            <tr>
+                                <td>@item.Date</td>
+                                <td>@item.FoodBudget</td>
+                                <td>@item.AccommodationBudget</td>
+                                <td>@item.TravelBudget</td>
+                                <td>@item.Activities</td>
+                                <td>@item.ThingsToCarry</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+            
+        <section class="chart">
+            <h3>Budget Allocation</h3>
+            <div class="chart-container" id="pieChartPlaceholder">
+                <canvas id="budgetPieChart"></canvas>
+            </div>             
+        </section>
+        <section class="chart">
+            <h3>Days per Trip</h3>
+            <div class="chart-container" id="barChartPlaceholder">
+                <canvas id="budgetBarChart"></canvas>
+            </div>
+        </section>
+        <section class="chart">
+            <h3>Expenses Distribution</h3>
+            <div class="chart-container" id="lineChartPlaceholder">
+                <canvas id="expensesLineChart"></canvas>
+            </div>
+        </section>
+        <section class="button-container">
+            <a href="@Url.Action("Index", "Trips")">Back To Trips</a>
+        </section>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        //Budget allocation pie chart
+        const pieData =  @Html.Raw(Json.Serialize(ViewBag.Budgets));
+        const barLineLabel =  @Html.Raw(Json.Serialize(ViewBag.Days));
+        const barData =  @Html.Raw(Json.Serialize(ViewBag.DailyBudget));
+        const lineDataFood =  @Html.Raw(Json.Serialize(ViewBag.DailyFoodBudget));
+        const lineDataAccommodation =  @Html.Raw(Json.Serialize(ViewBag.DailyAccommodationBudget));
+        const lineDataTravel =  @Html.Raw(Json.Serialize(ViewBag.DailyTravelBudget));
+        new Chart(document.getElementById("budgetPieChart"), {
+        type: 'pie',
+        data: {
+            labels: ['Food', 'Accommodation', 'Travel'],
+            datasets: [{
+                data: pieData, 
+                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
+            }]
+        },
+        options: {
+            responsive: true,
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+        }
+        });
+        // Days per Trip Bar Chart
+        new Chart(document.getElementById("budgetBarChart"), {
+            type: 'bar',
+            data: {
+                labels: barLineLabel, //Dynamic label
+                datasets: [{
+                    label: 'Budget',
+                    data: barData, // Dynamic data
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: { display: false },
+                scales: {
+                    x: {
+                        title: {
+                            display: false,
+                            text: 'Day'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Budget'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        // Expenses Distribution Line Chart
+        new Chart(document.getElementById("expensesLineChart"), {
+            type: 'line',
+            data: {
+                labels: barLineLabel, //Dynamic label
+                datasets: [
+                    {
+                        label: 'Food Expenses',
+                        data: lineDataFood, // Dynamic data
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Accommodation Expenses',
+                        data: lineDataAccommodation, // Dynamic data
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Travel Expenses',
+                        data: lineDataTravel, // Dynamic data
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: { display: false },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Locations'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Expenses ($)'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
