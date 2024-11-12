@@ -35,9 +35,7 @@ public class TripsController : Controller
         }
 
         _context.SaveChanges();
-        //return RedirectToAction(nameof(Index));
-        return RedirectToAction("Details", "Trips", new { id = trip.TripId });
-        
+        return RedirectToAction(nameof(Index));
     }
 
         return View(trip);
