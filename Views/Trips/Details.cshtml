@@ -37,6 +37,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             align-items: center; /* Ensure everything inside the form is centered */
+            align-self: center;
         }
 
         header {
@@ -177,11 +178,11 @@
                 <p><strong>To:</strong> @Model.DestinationLocation</p>
             </div>
             <div class="trip-info">
-                <p><strong>Start Date:</strong> @Model.StartDate</p>
-                <p><strong>End Date:</strong> @Model.EndDate</p>
+                <p><strong>Start Date:</strong> @Model.StartDate.ToString("MMM dd, yyyy")</p>
+                <p><strong>End Date:</strong> @Model.EndDate.ToString("MMM dd, yyyy")</p>
             </div>
         </header>
-        <section>
+        <div>
             <div>
                 <h2>Daily Activities & Costs</h2>
                 <table class="table table-itineraries">
@@ -196,10 +197,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            DateTime startDate = @Model.Itineraries.FirstOrDefault().Date; // First date as the starting date
+                        }
                         @foreach (var item in @Model.Itineraries)
                         {
+                            int dayNumber = (@item.Date - startDate).Days + 1; // Calculate day number
                             <tr>
-                                <td>@item.Date</td>
+                                <td>Day @dayNumber - @item.Date.ToString("MMM dd, yy")</td>
                                 <td>@item.FoodBudget</td>
                                 <td>@item.AccommodationBudget</td>
                                 <td>@item.TravelBudget</td>
@@ -210,29 +215,29 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        </div>
             
-        <section class="chart">
+        <div class="chart">
             <h3>Budget Allocation</h3>
             <div class="chart-container" id="pieChartPlaceholder">
                 <canvas id="budgetPieChart"></canvas>
             </div>             
-        </section>
-        <section class="chart">
-            <h3>Days per Trip</h3>
+        </div>
+        <div class="chart">
+            <h3>Budget Per Day</h3>
             <div class="chart-container" id="barChartPlaceholder">
                 <canvas id="budgetBarChart"></canvas>
             </div>
-        </section>
-        <section class="chart">
-            <h3>Expenses Distribution</h3>
+        </div>
+        <div class="chart">
+            <h3>Budget Distribution</h3>
             <div class="chart-container" id="lineChartPlaceholder">
                 <canvas id="expensesLineChart"></canvas>
             </div>
-        </section>
-        <section class="button-container">
+        </div>
+        <div class="button-container">
             <a href="@Url.Action("Index", "Trips")">Back To Trips</a>
-        </section>
+        </div>
     </div>
 </form>
 
